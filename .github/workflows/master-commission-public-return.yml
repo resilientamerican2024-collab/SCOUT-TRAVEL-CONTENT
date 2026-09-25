@@ -1,0 +1,100 @@
+name: master-commission-public-return
+
+on:
+  workflow_dispatch:
+    inputs:
+      master_commission_id:
+        description: "Master Commission ID"
+        required: true
+      stage_id:
+        description: "Completed stage ID"
+        required: true
+      completed_by:
+        description: "Authorized specialist identity"
+        required: true
+      next_stage_id:
+        description: "Preauthorized next stage ID"
+        required: true
+      next_recipient:
+        description: "Preauthorized next recipient"
+        required: true
+      return_json:
+        description: "PUBLIC_SANITIZED stage return JSON"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate-baton:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Validate sanitized Master Commission baton
+        shell: bash
+        env:
+          MASTER_COMMISSION_ID: ${{ inputs.master_commission_id }}
+          STAGE_ID: ${{ inputs.stage_id }}
+          COMPLETED_BY: ${{ inputs.completed_by }}
+          NEXT_STAGE_ID: ${{ inputs.next_stage_id }}
+          NEXT_RECIPIENT: ${{ inputs.next_recipient }}
+          RETURN_JSON: ${{ inputs.return_json }}
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          python3 - <<'PY'
+          import hashlib, json, os
+          from datetime import datetime, timezone
+
+          payload=json.loads(os.environ["RETURN_JSON"])
+          expected={
+            "master_commission_id": os.environ["MASTER_COMMISSION_ID"],
+            "stage_id_completed": os.environ["STAGE_ID"],
+            "completed_by": os.environ["COMPLETED_BY"],
+            "next_stage_id": os.environ["NEXT_STAGE_ID"],
+            "next_recipient": os.environ["NEXT_RECIPIENT"],
+          }
+          checks={k: payload.get(k)==v for k,v in expected.items()}
+          checks["classification_public_sanitized"]=payload.get("classification")=="PUBLIC_SANITIZED"
+          checks["completion_test_pass"]=payload.get("completion_test_result")=="PASS"
+          checks["work_product_refs_present"]=bool(payload.get("work_product_refs"))
+          checks["evidence_refs_present"]=bool(payload.get("evidence_refs"))
+          checks["next_stage_instructions_reference_present"]=bool(payload.get("next_stage_instructions_reference"))
+          checks["private_lsa_data_accessed_false"]=payload.get("private_lsa_data_accessed") is False
+          checks["credential_exposed_false"]=payload.get("credential_exposed") is False
+          passed=all(checks.values())
+          canonical=json.dumps(payload, sort_keys=True, separators=(",",":"))
+          out={
+            "schema_version":"1.0",
+            "master_commission_id":expected["master_commission_id"],
+            "stage_id_completed":expected["stage_id_completed"],
+            "completed_by":expected["completed_by"],
+            "next_stage_id":expected["next_stage_id"],
+            "next_recipient":expected["next_recipient"],
+            "executed_at_utc":datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "runtime_provenance":"github-actions/SCOUT-TRAVEL-CONTENT/master-commission-public-return",
+            "run_id":os.environ["GITHUB_RUN_ID"],
+            "run_attempt":os.environ["GITHUB_RUN_ATTEMPT"],
+            "classification":"PUBLIC_SANITIZED",
+            "synthetic_test":False,
+            "private_lsa_data_accessed":False,
+            "secrets_required":False,
+            "input_digest_sha256":hashlib.sha256(canonical.encode()).hexdigest(),
+            "checks":checks,
+            "output":{"deterministic_baton_validation":"PASS" if passed else "FAIL"},
+            "disposition":"UNVERIFIED_EXECUTION_OUTPUT"
+          }
+          raw=json.dumps(out,indent=2,sort_keys=True)+"\n"
+          open("evidence/master-commission-return.json","w").write(raw)
+          print(raw)
+          if not passed:
+            raise SystemExit(3)
+          PY
+
+      - name: Upload unverified Master Commission baton evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-commission-public-return
+          path: evidence/master-commission-return.json
+          retention-days: 7
