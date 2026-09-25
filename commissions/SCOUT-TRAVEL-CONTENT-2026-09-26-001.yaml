@@ -1,0 +1,75 @@
+commission_id: SCOUT-TRAVEL-CONTENT-2026-09-26-001
+parent_objective_id: FOUNDER-TRAVEL-REVENUE-2026-09-26
+commissioning_specialist: scout
+mission: >-
+  Investigate and design an evidence-backed travel-content revenue pilot using
+  Founder-owned original destination media, Facebook distribution, the existing
+  Viator affiliate capability, and selective Trending Edit cross-posting.
+desired_outcome: >-
+  A preserved Scout return with current primary-source platform evidence,
+  commercial analysis, a 30-day pilot, first 30 post concepts, destination and
+  Viator opportunity mapping, measurement criteria, and explicit uncertainties.
+scope:
+  destinations:
+    - Puerto Rico
+    - Dominican Republic
+    - Colombia
+    - New York City
+    - Florida
+    - Colorado
+    - Wyoming
+  proposed_test_cadence: 8-10 posts/day
+  note: "Cadence is a hypothesis to evaluate, not a mandated success formula."
+allowed_actions:
+  - SEARCH
+  - INSPECT
+  - READ
+  - COMPARE
+  - CLASSIFY
+  - RESEARCH
+  - ANALYZE
+  - SUMMARIZE
+  - COLLECT_EVIDENCE
+  - GENERATE_CANDIDATES
+  - PREPARE_STRUCTURED_WORK_PRODUCT
+prohibited_actions:
+  - SPEND_MONEY
+  - AUTHORIZE_FINANCIAL_TRANSACTIONS
+  - EXPOSE_CREDENTIALS
+  - PUBLISH_EXTERNALLY
+  - UPLOAD_PRIVATE_PHOTO_ARCHIVE
+  - CLAIM_UNVERIFIED_REVENUE
+  - IMPERSONATE_OTHER_SPECIALISTS
+  - SELF_VERIFY_REQUIRED_INDEPENDENT_VERIFICATION
+authoritative_sources:
+  - "Current official Meta/Facebook policy and monetization documentation"
+  - "Current official Viator affiliate/partner documentation where accessible"
+  - "Founder-provided original-media inventory metadata/references when authorized"
+  - "Public tourism/statistical primary sources appropriate to each destination"
+lead_sources:
+  - "Founder-provided Reddit screenshots: anecdotal Facebook monetization lead; UNVERIFIED"
+  - "Founder-provided Google AI Overview screenshot re Dominican Republic tourism; RESEARCH LEAD ONLY, replace with primary-source evidence"
+evidence_requirements: >-
+  Cite URLs for factual web claims; distinguish primary-source policy, reported
+  third-party evidence, anecdote, and Scout inference. Revenue figures from the
+  Reddit lead remain UNVERIFIED unless independently substantiated.
+output_schema:
+  - executive_finding
+  - current_policy_source_map
+  - brand_and_page_positioning
+  - destination_opportunity_map
+  - content_pillars
+  - facebook_cadence_analysis
+  - viator_opportunity_map
+  - trending_edit_crosspost_map
+  - 30_day_pilot_calendar
+  - first_30_publishable_post_concepts
+  - asset_requirements
+  - automation_specification
+  - measurement_plan
+  - risks_and_unknowns
+  - evidence_log
+  - timestamp
+time_cost_boundary: "No paid services or new subscriptions authorized."
+return_to: "returns/SCOUT-TRAVEL-CONTENT-2026-09-26-001.return.md"
+verification_requirement: "Independent verification required before claims are promoted as LSA-verified."
